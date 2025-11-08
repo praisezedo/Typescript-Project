@@ -1,42 +1,46 @@
 "use strict";
 const inputTask = document.getElementById('input-task');
 const inputDate = document.getElementById('input-date');
-let tasks = [{ task: "EAT Food", date: "2025-10-20" }, { task: "BATH", date: "2005-11-21" }];
-let index = tasks.length - 1;
-const storedTasks = localStorage.getItem('tasks');
+// Load from localStorage or set defaults
+let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+if (tasks.length === 0) {
+    tasks = [
+        { task: "EAT Food", date: "2025-10-20" },
+        { task: "BATH", date: "2005-11-21" }
+    ];
+}
 let taskContainer = document.createElement('div');
 taskContainer.className = "task-container";
-taskContainer.innerHTML = `
-<ol id="list-of-items">
-${tasks.map((t, index) => {
-    return `<li><h3>${t.task}</h3><h3>${t.date}</h3><button onclick="removeTask(${index})">Delete</button></li>`;
-}).join('')}
-</ol>
-`;
-document.body.append(taskContainer);
-// add task 
+function renderTasks() {
+    tasks.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const listHTML = tasks.map((t, i) => `
+    <li>
+      <h3>${t.task}</h3>
+      <h3>${t.date}</h3>
+      <button onclick="removeTask(${i})">Delete</button>
+    </li>
+  `).join('');
+    taskContainer.innerHTML = `<ol id="list-of-items">${listHTML}</ol>`;
+}
 function addTask() {
-    let Items = document.querySelector('ol');
-    let itemTask = inputTask.value;
-    let itemDate = inputDate.value;
-    let it = document.createElement('li');
-    it.innerHTML = `<h3>${itemTask}</h3><h3>${itemDate}</h3><button onclick="removeTask(${index})" class="bg-red-700">Delete</button>`;
-    let its = { task: itemTask, date: itemDate };
-    tasks.push(its);
-    Items.append(it);
+    const itemTask = inputTask.value.trim();
+    const itemDate = inputDate.value.trim();
+    if (!itemTask || !itemDate)
+        return;
+    const newTask = { task: itemTask, date: itemDate };
+    tasks.push(newTask);
     localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderTasks();
     inputTask.value = "";
     inputDate.value = "";
 }
-// remove task
 function removeTask(index) {
     tasks.splice(index, 1);
-    const Items = document.getElementById('list-of-items');
-    Items.innerHTML = `
-${tasks.map((t, i) => {
-        return `<li><h3>${t.task}</h3><h3>${t.date}</h3><button onclick="removeTask(${i})">Delete</button></li>`;
-    })}`;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderTasks();
 }
+renderTasks();
+document.body.append(taskContainer);
 /*
 
 // tuple
