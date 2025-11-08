@@ -1,0 +1,23 @@
+body {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 70vh;
+}
+li {
+    display: grid;
+    grid-template-columns: repeat(3 , 1fr);
+    gap: 150px;
+}
+li button {
+    color: white;
+    padding: 20px;
+    background: red;
+    margin: 10px;
+    border-radius: 10px;
+}
+li h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
