@@ -2,18 +2,31 @@
   "name": "play",
   "version": "1.0.0",
   "description": "",
-  "main": "play.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc -w"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praisezedo/Typescript-Project.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/praisezedo/Typescript-Project/issues"
+  },
+  "homepage": "https://github.com/praisezedo/Typescript-Project#readme",
   "devDependencies": {
-    "ts-node": "^10.9.2",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
   }
 }

@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2015",
     "module": "commonjs",
-    "outDir": "./dist",
+    "outDir": "./typecomplied",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["dist", "node_modules"]
 }

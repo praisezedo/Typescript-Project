@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="play.css">
+</head>
+<body>
+    <header>
+    <h1>Track<span>EXP</span></h1>  
+    </header>
+      <div id="input-section">
+        <h1 id="display-amount">Balance: ₦00.00</h1>
+        <div id="display-summary">
+           <h4 id="display-summary-credit">Credit: ↑₦00.00</h4>
+            <h4 id="display-summary-debit"> Debit: ↓₦00.00</h4>
+        </div>
+        <select name="input-select" id="input-select">
+            <option value="credit">credit</option>
+            <option value="debit">debit</option>
+        </select>
+        <input type="text" id="description-value" placeholder="Enter description">
+        <input type="text" name="" id="amount-value" placeholder="Enter amount">
+        <button id="add-expence-btn">Add Exp</button>
+        </div>
+        <div id="display-expence">
+            <div id="credit-expence">
+                <h1>CREDIT</h1>
+            </div>
+            <div id="debit-expence">
+                <h1>DEBIT</h1>
+            </div>
+        </div>
+    <script src="../typecomplied/play.js"></script>
+</body>
+</html>

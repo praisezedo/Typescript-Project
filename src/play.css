@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+        body {
+            margin: 0;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.788);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            border-bottom: 2px solid orangered;
+        }
+        header h1 {
+            color: white;
+            
+        }
+        header h1 span {
+            color: orangered;
+        }
+        #input-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.788);
+            padding: 70px 0;
+            margin-top: 80px;
+            margin-bottom: 70px;
+        }
+       input , select {
+         width: 70%;
+         margin: 10px 0;
+         padding: 20px;
+         border-radius: 10px;
+       }
+       #display-amount {
+        color: white;
+        font-size: 4rem;
+        font-weight: bold;
+        font-family: monospace;
+       }
+       #add-expence-btn {
+         width: 100px;
+         background: orangered;
+         border: none;
+         color: white;
+         padding: 10px;
+        font-size: 1rem;
+        border-radius: 10px;
+       }
+       #add-expence-btn:hover {
+        background: rgba(255, 68, 0, 0.514);
+       }
+       #display-expence {
+        display: grid;
+        grid-template-columns: repeat(2 , 1fr);
+        gap: 10px;
+       }
+        #display-expence h1 {
+          color: orangered;
+          text-align: center;
+        }
+       .credit-item {
+          display: flex;
+          padding: 10px 2px;
+          border: 2px solid green;
+          background: rgba(0, 128, 0, 0.493);
+       }
+       .desc {
+        width: 50%;
+        font-size: 1.5rem;
+       }
+       .amt {
+        width: 40%;
+          font-size: 1.5rem;
+       }
+       .delete-button-div {
+        border-radius: 100%;
+        border: 2px solid gray;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+       }
+       .delete-button-div:hover {
+        background: rgba(128, 128, 128, 0.425);
+       }
+       .delete-button {
+        width: 10%;
+        text-align: right;
+        background: transparent;
+        color: black;
+        border: none;
+       }
+        .debit-item {
+          display: flex;
+          padding: 10px 2px;
+          border: 2px solid red;
+          background:rgba(255, 0, 0, 0.459);
+       }
+       #display-summary {
+        display: grid;
+        grid-template-columns: repeat(2 , 1fr);
+        gap: 20px;
+       }
+        #display-summary-credit {
+          color: rgba(0, 128, 0, 0.719);
+           font-size: 1.5rem;
+           font-family: monospace;
+        }
+        #display-summary-debit {
+            font-size: 1.5rem;
+            color: rgba(255, 0, 0, 0.712);
+              font-family: monospace;
+        }
