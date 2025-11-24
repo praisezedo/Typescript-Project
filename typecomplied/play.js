@@ -1,4 +1,7 @@
 "use strict";
+// =============================
+// ELEMENT REFERENCES
+// =============================
 const amountDisplay = document.getElementById('display-amount');
 const typeSelect = document.getElementById('input-select');
 const descriptionValue = document.getElementById('description-value');
@@ -8,83 +11,115 @@ const creditExpence = document.getElementById('credit-expence');
 const debitExpence = document.getElementById('debit-expence');
 const crebitSummaryDisplay = document.getElementById('display-summary-credit');
 const debitExpenceSummary = document.getElementById('display-summary-debit');
-const ExpenceItems = [];
-let totalAmount = 0;
-class Expence {
+// =============================
+// DATA STRUCTURES
+// =============================
+class Expense {
     constructor(type, desc, amount) {
-        this.id = 0;
-        this.amount = amount;
-        this.desc = desc;
         this.type = type;
-        this.id = ++Expence.currentId;
+        this.desc = desc;
+        this.amount = amount;
+        this.id = ++Expense.currentId;
     }
 }
-Expence.currentId = 0;
-function addExpenceItem() {
-    creditExpence.innerHTML = '';
-    debitExpence.innerHTML = '';
-    for (let i = 0; i < ExpenceItems.length; i++) {
-        const expItem = ExpenceItems[i];
-        const selectedDiv = expItem.type === 'credit' ? creditExpence : debitExpence;
-        const cssDiv = expItem.type === 'credit' ? 'credit-item' : 'debit-item';
-        const template = `
-      <div class=${cssDiv}>
-        <div class='desc'>${expItem.desc}</div>
-      <div class='amt'>₦${expItem.amount.toLocaleString()}</div>
-      <div class='delete-button-div'>
-    <button class='delete-button deleteExpence(${expItem.id})'>X</button>
-      </div>
-      </div>
-    `;
-        selectedDiv.insertAdjacentHTML('beforeend', template);
+Expense.currentId = 0;
+const ExpenseItems = [];
+// =============================
+// CORE FUNCTIONS
+// =============================
+// Add new expense entry
+function addExpense() {
+    const selectedType = typeSelect.value;
+    const description = descriptionValue.value.trim();
+    const amount = Number(amountValue.value);
+    if (!description || !amount || amount <= 0) {
+        alert("Please enter a valid description and amount.");
+        return;
     }
-}
-function calculateTotalAmount() {
-    return ExpenceItems.reduce((total, exp) => {
-        let amount = exp.amount;
-        if (exp.type === 'debit') {
-            amount = -exp.amount;
-        }
-        total += amount;
-        return total;
-    }, 0);
-}
-function calculateSummary() {
-    let debitTotal = 0;
-    let creditTotal = 0;
-    ExpenceItems.forEach(exp => {
-        let amount = exp.amount;
-        if (exp.type === 'credit') {
-            creditTotal += amount;
-            crebitSummaryDisplay.innerHTML = `Credit: ↑₦${creditTotal.toLocaleString()}.00`;
-        }
-        else {
-            debitTotal += amount;
-            debitExpenceSummary.innerHTML = `Debit: ↓₦${debitTotal.toLocaleString()}.00`;
-        }
-    });
-}
-function deleteExpence(id) {
-    let exp = ExpenceItems.find((expense) => {
-        return expense.id === id;
-    });
-    let index = ExpenceItems.indexOf(exp);
-    ExpenceItems.splice(index, 1);
-    displayExpenceItem();
-}
-function displayExpenceItem() {
-    const selectedType = typeSelect.value === 'credit' ? 'credit' : 'debit';
-    const amountResult = Number(amountValue.value);
-    const exp = new Expence(selectedType, descriptionValue.value.toUpperCase(), amountResult);
-    ExpenceItems.push(exp);
-    totalAmount = calculateTotalAmount();
-    amountDisplay.innerHTML = `Balance: ₦${totalAmount.toLocaleString()}.00`;
+    const expense = new Expense(selectedType, description.toUpperCase(), amount);
+    ExpenseItems.push(expense);
     descriptionValue.value = '';
     amountValue.value = '';
+    updateUI();
 }
-addExpenceBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-    displayExpenceItem();
+// Delete an expense by ID
+function deleteExpense(id) {
+    const index = ExpenseItems.findIndex(exp => exp.id === id);
+    if (index !== -1) {
+        ExpenseItems.splice(index, 1);
+        updateUI();
+    }
+}
+// =============================
+// CALCULATIONS
+// =============================
+// Total account balance
+function calculateTotalBalance() {
+    return ExpenseItems.reduce((total, exp) => {
+        return exp.type === "credit" ? total + exp.amount : total - exp.amount;
+    }, 0);
+}
+// Total credit and debit summary
+function calculateSummary() {
+    let credit = 0;
+    let debit = 0;
+    ExpenseItems.forEach(exp => {
+        exp.type === "credit" ? (credit += exp.amount) : (debit += exp.amount);
+    });
+    crebitSummaryDisplay.innerHTML = `Credit: ↑₦${credit.toLocaleString()}.00`;
+    debitExpenceSummary.innerHTML = `Debit: ↓₦${debit.toLocaleString()}.00`;
+}
+// =============================
+// RENDER FUNCTIONS
+// =============================
+// Re-render all items in the UI
+function renderExpenseItems() {
+    creditExpence.innerHTML = '';
+    debitExpence.innerHTML = '';
+    ExpenseItems.forEach(exp => {
+        const container = exp.type === "credit" ? creditExpence : debitExpence;
+        const cssClass = exp.type === "credit" ? "credit-item" : "debit-item";
+        const template = `
+      <div class="${cssClass}">
+        <div class="desc">${exp.desc}</div>
+        <div class="amt">₦${exp.amount.toLocaleString()}</div>
+        <div class="delete-button-div">
+          <button class="delete-button" data-id="${exp.id}">X</button>
+        </div>
+      </div>
+    `;
+        container.insertAdjacentHTML("beforeend", template);
+    });
+}
+// Update balance, summary, and expense list
+function updateUI() {
+    const total = calculateTotalBalance();
+    amountDisplay.innerHTML = `Balance: ₦${total.toLocaleString()}.00`;
     calculateSummary();
-    addExpenceItem();
+    renderExpenseItems();
+}
+// =============================
+// EVENT LISTENERS
+// =============================
+// Add new expense
+addExpenceBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    addExpense();
 });
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        addExpense();
+    }
+});
+// Delete buttons (event delegation)
+function onDeleteClick(e) {
+    const target = e.target;
+    const btn = target.closest(".delete-button");
+    if (btn) {
+        const id = Number(btn.dataset.id);
+        if (!isNaN(id))
+            deleteExpense(id);
+    }
+}
+creditExpence.addEventListener("click", onDeleteClick);
+debitExpence.addEventListener("click", onDeleteClick);
