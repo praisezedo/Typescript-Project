@@ -70,29 +70,28 @@
           color: white;
        }
        .desc {
-        width: 50%;
+        width: 40%;
         font-size: 1.5rem;
        }
        .amt {
-        width: 40%;
+        width: 30%;
           font-size: 1.5rem;
        }
-       .delete-button-div {
-        border-radius: 100%;
-        border: 2px solid  white;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-       }
-       .delete-button-div:hover {
-        background: rgba(128, 128, 128, 0.425);
+       .date {
+         width:  15%;
+         font-size: 1.5rem;
        }
        .delete-button {
-        width: 10%;
+        padding: 4px;
         text-align: right;
         background: transparent;
+        font-size: 1.5rem;
         color: white;
-        border: none;
+        border: 2px solid white;
+        border-radius: 100%;
+        background: rgba(128, 128, 128, 0.425);
+        right: 0;
+        position: relative;
        }
         .debit-item {
           display: flex;

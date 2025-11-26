@@ -1,11 +1,10 @@
-// =============================
-// ELEMENT REFERENCES
-// =============================
+
 const amountDisplay = document.getElementById('display-amount')! as HTMLHeadingElement;
 const typeSelect = document.getElementById('input-select')! as HTMLSelectElement;
 const descriptionValue = document.getElementById('description-value')! as HTMLInputElement;
 const amountValue = document.getElementById('amount-value')! as HTMLInputElement;
 const addExpenceBtn = document.getElementById('add-expence-btn')! as HTMLButtonElement;
+const dateValue = document.getElementById('date-value')! as HTMLInputElement;
 
 const creditExpence = document.getElementById('credit-expence')! as HTMLDivElement;
 const debitExpence = document.getElementById('debit-expence')! as HTMLDivElement;
@@ -13,34 +12,62 @@ const debitExpence = document.getElementById('debit-expence')! as HTMLDivElement
 const crebitSummaryDisplay = document.getElementById('display-summary-credit')! as HTMLHeadingElement;
 const debitExpenceSummary = document.getElementById('display-summary-debit')! as HTMLHeadingElement;
 
-// =============================
-// DATA STRUCTURES
-// =============================
 class Expense {
   private static currentId = 0;
-
   readonly id: number;
+
   constructor(
     public type: "credit" | "debit",
     public desc: string,
-    public amount: number
+    public amount: number,
+    public date: string,
+    id?: number 
   ) {
-    this.id = ++Expense.currentId;
+    if (typeof id === 'number') {
+      this.id = id;
+      // keep static counter up-to-date so new ids don't clash with restored ones
+      if (id > Expense.currentId) Expense.currentId = id;
+    } else {
+      this.id = ++Expense.currentId;
+    }
   }
 }
 
 const ExpenseItems: Expense[] = [];
 
-// =============================
-// CORE FUNCTIONS
-// =============================
+// Save and load from localStorage
+const STORAGE_KEY = 'track_expense_items';
+
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ExpenseItems));
+  } catch (err) {
+    console.error('Failed to save expenses to localStorage', err);
+  }
+}
+
+function loadFromLocalStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const parsed = JSON.parse(raw) as Array<{ id: number; type: "credit" | "debit"; desc: string; amount: number; date: string }>;
+    ExpenseItems.length = 0;
+    parsed.forEach(item => {
+      // restore using constructor with id so next id stays unique
+      ExpenseItems.push(new Expense(item.type, item.desc, item.amount, item.date, item.id));
+    });
+    updateUI();
+  } catch (err) {
+    console.error('Failed to load expenses from localStorage', err);
+  }
+}
 
 // Add new expense entry
 function addExpense() {
   const selectedType = typeSelect.value as "credit" | "debit";
   const description = descriptionValue.value.trim();
   const amount = Number(amountValue.value);
-
+  const date = dateValue.value;
   if (!description || !amount || amount <= 0) {
     alert("Please enter a valid description and amount.");
     return;
@@ -49,14 +76,19 @@ function addExpense() {
   const expense = new Expense(
     selectedType,
     description.toUpperCase(),
-    amount
+    amount,
+    date
   );
 
   ExpenseItems.push(expense);
 
+  // clear inputs
   descriptionValue.value = '';
   amountValue.value = '';
+  dateValue.value = '';
 
+  // persist and update UI
+  saveToLocalStorage();
   updateUI();
 }
 
@@ -65,14 +97,10 @@ function deleteExpense(id: number) {
   const index = ExpenseItems.findIndex(exp => exp.id === id);
   if (index !== -1) {
     ExpenseItems.splice(index, 1);
+    saveToLocalStorage(); // persist after deletion
     updateUI();
   }
 }
-
-// =============================
-// CALCULATIONS
-// =============================
-
 // Total account balance
 function calculateTotalBalance() {
   return ExpenseItems.reduce((total, exp) => {
@@ -93,10 +121,6 @@ function calculateSummary() {
   debitExpenceSummary.innerHTML = `Debit: ↓₦${debit.toLocaleString()}.00`;
 }
 
-// =============================
-// RENDER FUNCTIONS
-// =============================
-
 // Re-render all items in the UI
 function renderExpenseItems() {
   creditExpence.innerHTML = '';
@@ -105,14 +129,12 @@ function renderExpenseItems() {
   ExpenseItems.forEach(exp => {
     const container = exp.type === "credit" ? creditExpence : debitExpence;
     const cssClass = exp.type === "credit" ? "credit-item" : "debit-item";
-
     const template = `
       <div class="${cssClass}">
         <div class="desc">${exp.desc}</div>
         <div class="amt">₦${exp.amount.toLocaleString()}</div>
-        <div class="delete-button-div">
+        <div class="date">${exp.date}</div>
           <button class="delete-button" data-id="${exp.id}">X</button>
-        </div>
       </div>
     `;
 
@@ -129,9 +151,8 @@ function updateUI() {
   renderExpenseItems();
 }
 
-// =============================
-// EVENT LISTENERS
-// =============================
+// Load saved expenses on startup
+loadFromLocalStorage();
 
 // Add new expense
 addExpenceBtn.addEventListener("click", (e) => {
@@ -143,7 +164,7 @@ window.addEventListener('keydown' , (e) => {
       addExpense();
      }
 })
-// Delete buttons (event delegation)
+// Delete buttons 
 function onDeleteClick(e: MouseEvent) {
   const target = e.target as HTMLElement;
   const btn = target.closest(".delete-button") as HTMLButtonElement | null;
@@ -156,3 +177,7 @@ function onDeleteClick(e: MouseEvent) {
 
 creditExpence.addEventListener("click", onDeleteClick);
 debitExpence.addEventListener("click", onDeleteClick);
+
+
+
+
