@@ -4,15 +4,13 @@ const inputTask = document.getElementById('task-input');
 const inputDate = document.getElementById('date-input');
 const addTaskBtn = document.getElementById('add-button');
 const displayTaskDiv = document.getElementById('task-display');
-//create a class
+// class
 class TaskManager {
     constructor(task, time, id) {
         this.task = task;
         this.time = time;
         if (typeof id === 'number') {
             this.id = id;
-            if (id > TaskManager.currentId)
-                TaskManager.currentId = id;
         }
         else {
             this.id = ++TaskManager.currentId;
@@ -20,8 +18,17 @@ class TaskManager {
     }
 }
 TaskManager.currentId = 0;
-let tasks = [];
-//add task function
+// load tasks from localstorage
+let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+// reset current ID based on stored tasks
+if (tasks.length > 0) {
+    TaskManager.currentId = Math.max(...tasks.map(t => t.id));
+}
+// SAVE TASKS TO LOCALSTORAGE
+function saveToLocal() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+// add task
 function addTask() {
     const taskvalue = inputTask.value;
     const datevalue = inputDate.value;
@@ -29,30 +36,32 @@ function addTask() {
         return;
     const task = new TaskManager(taskvalue, datevalue);
     tasks.push(task);
+    saveToLocal();
     displayTaskDiv.innerHTML = '';
     displayUI();
     inputTask.value = '';
     inputDate.value = '';
 }
-//display task in UI 
+// display UI
 function displayUI() {
+    displayTaskDiv.innerHTML = '';
     tasks.forEach(task => {
         const template = `
-                <h1>${task.task.toUpperCase()}</h1>
-                <h1>${task.time}</h1>
-                <button onclick="removeTask(${task.id})">Delete Task</button>
-                <input type="checkbox">
+            <h1>${task.task.toUpperCase()}</h1>
+            <h1>${task.time}</h1>
+            <button onclick="removeTask(${task.id})">Delete Task</button>
         `;
         displayTaskDiv.innerHTML += template;
     });
 }
-//remove task by ID
+// remove task
 function removeTask(id) {
-    const index = tasks.findIndex(t => t.id === id);
-    if (index !== -1) {
-        tasks.splice(index, 1);
-    }
+    tasks = tasks.filter(t => t.id !== id);
+    saveToLocal();
+    displayTaskDiv.innerHTML = '';
     displayUI();
 }
-// expose delete function globally for HTML button
+window.removeTask = removeTask;
 addTaskBtn.addEventListener('click', addTask);
+// load UI on page load
+displayUI();
