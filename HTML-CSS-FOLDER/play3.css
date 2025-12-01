@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+h1 {
+    font-size: 10rem;
+    font-family: monospace;
+}
+.btn-container {
+    display: grid;
+    grid-template-columns: repeat(4 , 1fr);
+    gap: 70px;
+}
+.btn-container button {
+    padding: 10px;
+    font-size: 2rem;
+    border-radius: 10px;
+    border: none;
+}
+.add-btn {
+    background: green;
+    color: white;
+}
+.sub-btn {
+    background: red;
+    color: white;
+}
+.reset-btn {
+     background: blue;
+     color: white;
+} 
+.save-btn {
+    background: yellow;
+}
+.save {
+    font-size: 2rem;
+    margin-top: 50px;
+}
