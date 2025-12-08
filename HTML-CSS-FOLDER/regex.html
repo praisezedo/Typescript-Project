@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGEX PRACTICE</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-white flex-col justify-center items-center text-center">
+    <header class="w-full flex p-[20px]">
+        <h1 class="font-bold text-[2rem]">REGEX</h1>
+    </header>
+<main class="w-full flex flex-col justify-center items-center gap-[20px] p-[20px] h-[70vh]">
+    <section class="bg-blue-500 flex flex-col gap-[20px] justify-center items-center p-[20px] border-[2px] border-black rounded-[10px] w-[600px]">
+        <h2 class="font-bold text-[2rem] mb-[20px]">EMAIL & PHONE VALIDATION</h2>
+
+<input class="p-[10px] font-bold text-[1.5rem] border-2 rounded-[10px] focus:border-black  focus:outline-none" list="selected" name="options" id="options" placeholder="Select an option">
+<datalist id="selected">
+    <option value="Email Validation">praiseinnocent049@gmail.com</option>
+    <option value="Phone Validation">+2347050243807</option>
+</datalist>
+
+        <div class="hidden mt-[20px] font-bold text-[1.5rem] p-[10px] border-2 rounded-[10px] gap-[20px]" id="email">
+            <label for="email">Email:</label>
+            <input class="focus:outline-none focus:border-none" type="text" id="email-input" placeholder="Enter your email">
+        </div>
+
+        <div class="hidden mt-[20px] font-bold text-[1.5rem] p-[10px] border-2 rounded-[10px] gap-[20px]" id="phone">
+            <label for="phone">Phone Number:</label>
+            <input class="focus:outline-none focus:border-none" type="text" id="phone-input" placeholder="Enter your phone number">
+        </div>
+        <button class="p-[10px] font-bold text-[1.5rem] bg-black text-white rounded-[10px]" id="verify-btn">Verify</button>
+        <div id="result-display" class="font-bold text-[1.5rem]"></div>
+    </section>
+</main>
+   <script src="../typecomplied/regex-practice/regex.js"></script> 
+</body>
+</html>
